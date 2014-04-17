@@ -48,4 +48,29 @@ describe('mock modules', function() {
     expect(element(by.css('[app-version]')).getText()).toEqual('2');
   });
 
+  it('should load mock modules after refresh', function() {
+    browser.addMockModule('moduleA', mockModuleA);
+
+    browser.get('index.html');    
+    expect(element(by.css('[app-version]')).getText()).toEqual('2');
+    
+    browser.refresh();
+    expect(element(by.css('[app-version]')).getText()).toEqual('2');
+  });
+
+  it('should load mock modules after navigating back and forward', function() {
+    browser.addMockModule('moduleA', mockModuleA);
+
+    browser.get('index.html');  
+    expect(element(by.css('[app-version]')).getText()).toEqual('2'); 
+
+    browser.get('index.html#/repeater');
+    expect(element(by.css('[app-version]')).getText()).toEqual('2');
+
+    browser.back();
+    expect(element(by.css('[app-version]')).getText()).toEqual('2');
+
+    browser.forward();
+    expect(element(by.css('[app-version]')).getText()).toEqual('2');
+  });
 });

@@ -24,4 +24,30 @@ describe('using an ActionSequence', function() {
 
     alertDialog.accept();
   });
+
+  it('should refresh properly', function() {
+    var username = element(by.model('username'));
+    var name = element(by.binding('username'));
+    username.clear();
+    expect(name.getText()).toEqual('');
+
+    browser.refresh();
+
+    expect(name.getText()).toEqual('Anon');
+  });
+
+  it('should navigate back and forward properly', function() {
+    var port =  process.env.HTTP_PORT || '8000';
+    browser.get('index.html#/repeater');
+    expect(browser.getCurrentUrl()).
+      toEqual('http://localhost:'+port+'/index.html#/repeater');
+
+    browser.back();
+    expect(browser.getCurrentUrl()).
+      toEqual('http://localhost:'+port+'/index.html#/form');
+    
+    browser.forward();
+    expect(browser.getCurrentUrl()).
+      toEqual('http://localhost:'+port+'/index.html#/repeater'); 
+  });
 });
