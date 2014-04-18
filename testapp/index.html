@@ -34,4 +34,24 @@
   <script src="app.js"></script>
 
 </body>
+
+<script>
+  function printStatus() {
+    console.log('-- document.readyState: ' + document.readyState);
+    console.log('-- window.name: ' + window.name);
+    console.log('-- window.location.href: ' + window.location.href);
+  }
+  console.log('from the script tag');
+  printStatus();
+
+  window.addEventListener('DOMContentLoaded', function() {
+    console.log('event: DOMContentLoaded')
+    printStatus();
+  });
+  window.addEventListener('load', function() {
+    console.log('event: load');
+    printStatus();
+  });
+
+</script>
 </html>
