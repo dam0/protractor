@@ -1,21 +1,23 @@
 var util = require('util');
 
+
+// A module to override the 'version' service. This function will be
+// executed in the context of the application under test, so it may
+// not refer to any local variables.
+var mockModuleA = function() {
+  var newModule = angular.module('moduleA', []);
+  newModule.value('version', '2');
+};
+
+// A second module overriding the 'version' service. 
+// This module shows the use of a string for the load
+// function.
+// TODO(julie): Consider this syntax. Should we allow loading the
+// modules from files? Provide helpers?
+var mockModuleB = "angular.module('moduleB', []).value('version', '3');";
+
+
 describe('mock modules', function() {
-  // A module to override the 'version' service. This function will be
-  // executed in the context of the application under test, so it may
-  // not refer to any local variables.
-  var mockModuleA = function() {
-    var newModule = angular.module('moduleA', []);
-    newModule.value('version', '2');
-  };
-
-  // A second module overriding the 'version' service. 
-  // This module shows the use of a string for the load
-  // function.
-  // TODO(julie): Consider this syntax. Should we allow loading the
-  // modules from files? Provide helpers?
-  var mockModuleB = "angular.module('moduleB', []).value('version', '3');";
-
   afterEach(function() {
     browser.clearMockModules();
   });
@@ -47,6 +49,12 @@ describe('mock modules', function() {
 
     expect(element(by.css('[app-version]')).getText()).toEqual('2');
   });
+});
+
+ddescribe('navigation', function() {
+  afterEach(function() {
+    browser.clearMockModules();
+  });
 
   it('should load mock modules after refresh', function() {
     browser.addMockModule('moduleA', mockModuleA);
@@ -62,15 +70,39 @@ describe('mock modules', function() {
     browser.addMockModule('moduleA', mockModuleA);
 
     browser.get('index.html');  
-    expect(element(by.css('[app-version]')).getText()).toEqual('2'); 
+    expect(element(by.css('[app-version]')).getText()).toEqual('2');
+    expect(browser.getLocationAbsUrl()).toMatch('form');
 
     browser.get('index.html#/repeater');
     expect(element(by.css('[app-version]')).getText()).toEqual('2');
+    expect(browser.getLocationAbsUrl()).toMatch('repeater');
 
     browser.back();
     expect(element(by.css('[app-version]')).getText()).toEqual('2');
+    expect(browser.getLocationAbsUrl()).toMatch('form');
 
     browser.forward();
     expect(element(by.css('[app-version]')).getText()).toEqual('2');
+    expect(browser.getLocationAbsUrl()).toMatch('repeater');
+  });
+
+  it('should load mock modules after clicking and navigating back', function() {
+    browser.addMockModule('moduleA', mockModuleA);
+
+    browser.get('index.html');  
+    expect(element(by.css('[app-version]')).getText()).toEqual('2');
+    expect(browser.getLocationAbsUrl()).toMatch('form');
+
+    element(by.linkText('repeater')).click();
+    expect(element(by.css('[app-version]')).getText()).toEqual('2');
+    expect(browser.getLocationAbsUrl()).toMatch('repeater');
+
+    browser.back();
+    expect(element(by.css('[app-version]')).getText()).toEqual('2');
+    expect(browser.getLocationAbsUrl()).toMatch('form');
+
+    browser.forward();
+    expect(element(by.css('[app-version]')).getText()).toEqual('2');
+    expect(browser.getLocationAbsUrl()).toMatch('repeater');
   });
 });

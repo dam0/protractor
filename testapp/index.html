@@ -53,5 +53,10 @@
     printStatus();
   });
 
+  window.addEventListener('popstate', function() {
+    console.log('event: popstate');
+    printStatus();
+  });
+
 </script>
 </html>

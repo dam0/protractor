@@ -5,6 +5,7 @@ var util = require('util');
 var testApp = express();
 var DEFAULT_PORT = process.env.HTTP_PORT || 8000;
 var testAppDir = require('path').resolve(__dirname, '..');
+var realversionHits = 0;
 
 var main = function(argv) {
   var port = Number(argv[2]) || DEFAULT_PORT;
@@ -26,6 +27,11 @@ var testMiddleware = function(req, res, next) {
     setTimeout(function() {
       res.send(200, 'slow template contents');
     }, 2000);
+  } else if (req.path == '/version') {
+    realversionHits++;
+    console.log(realversionHits);
+  } else if (req.path == '/versionhits') {
+    res.send(200, realversionHits);
   } else {
     return next();
   }
