@@ -7,7 +7,7 @@
  */
 
 'use strict';
-var docGenerator = require('dgeni');
+var dgeni = require('dgeni');
 var rimraf = require('rimraf');
 var fs = require('fs');
 var path = require('path');
@@ -46,7 +46,8 @@ function deleteBuildDir() {
  */
 function generateDocs(config) {
   console.log('Generating docs');
-  docGenerator(config).generateDocs().then(function() {
+  var generateDocs = dgeni.generator(config);
+  generateDocs().then(function() {
     fs.readdir(buildPath, function(err, files) {
       if (err) {
         throw  err;
@@ -146,8 +147,8 @@ deleteBuildDir().
       return readGitHash();
     }).
     then(function(linksHash) {
-      console.log('Using hash for doc links', linksHash);
-      return _.extend(require('dgeni/lib/utils/config').load(configPath), {
+      console.log('Using hash (', linksHash, ') for doc links');
+      return _.extend(require('dgeni/lib/config').load(configPath), {
         linksHash: linksHash
       });
     }).then(function(config) {

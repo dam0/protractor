@@ -1,16 +1,11 @@
 var _ = require('lodash');
 var path = require('path');
 var packagePath = __dirname;
-var basePackage = require('dgeni-packages/jsdoc');
 
 module.exports = function(config) {
 
-  config = basePackage(config);
-
-  // Use the jsdoc extractor instead of the default to parse the function name.
-  config.set('source.extractors', [
-    require('dgeni-packages/jsdoc/extractors/jsdoc.js')
-  ]);
+  require('dgeni-packages/jsdoc')(config);
+  require('dgeni-packages/nunjucks')(config);
 
   /*
    * Add a couple of processors to the pipe to do extra parsing and rendering.
